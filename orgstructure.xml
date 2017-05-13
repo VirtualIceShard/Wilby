@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<organization>
+<folderstructure>
+<folder name="main"></folder>
+<folder name="stylesheets">
+<folder name="fonts"></folder>
+<folder name="images">
+<folder name="hd">
+</folder>
+</folder>
+</folder>
+<folder name="scripts">
+<folder name="libs">
+</folder>
+</folder>
+<folder name="txts"></folder>
+</folderstructure>
+<file-orientation>
+<for ftype=".css">
+<sor folder="stylesheets" how="FileTypeSpecification"></sor>
+</for>
+<for ftype=".js">
+<sor folder="scripts/libs" how="FullNameSpecification" spec="simplelib-4.9.0.min"></sor>
+<sor folder="scripts" how="FileTypeSpecification"></sor>
+</for>
+<for ftype=".png">
+<sor folder="stylesheets/images" how="FileTypeSpecification"></sor>
+</for>
+<for ftype=".jgp">
+<sor folder="stylesheets/images" how="FileTypeSpecification"></sor>
+</for>
+<for ftype=".otf">
+<sor folder="stylesheets/fonts" how="FileTypeSpecification"></sor>
+</for>
+<for ftype=".ttf">
+<sor folder="stylesheets/fonts" how="FileTypeSpecification"></sor>
+</for>
+<for ftype=".txt">
+<sor folder="txts" how="PrefixSpecification" spec="txxt-"></sor>
+</for>
+</file-orientation>
+</organization>
