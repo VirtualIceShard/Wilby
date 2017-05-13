@@ -16,27 +16,31 @@
 <folder name="txts"></folder>
 </folderstructure>
 <file-orientation>
-<for ftype=".css">
-<sor folder="stylesheets" how="FileTypeSpecification"></sor>
+<for folder="stylesheets">
+<sor how="FileTypeSpecification" spec=".css"></sor>
 </for>
-<for ftype=".js">
-<sor folder="scripts/libs" how="FullNameSpecification" spec="simplelib-4.9.0.min"></sor>
-<sor folder="scripts" how="FileTypeSpecification"></sor>
+<for folder="scripts/libs">
+<sor how="FullNameSpecification" spec="simplelib-4.9.0.min"></sor>
+<sor how="FileTypeSpecification" spec=".js"></sor>
 </for>
-<for ftype=".png">
-<sor folder="stylesheets/images" how="FileTypeSpecification"></sor>
+<for folder="scripts">
+<sor how="FileTypeSpecification" spec=".js"></sor>
 </for>
-<for ftype=".jgp">
-<sor folder="stylesheets/images" how="FileTypeSpecification"></sor>
+<for folder="stylesheets/images">
+<sor how="FileTypeSpecification" spec=".png"></sor>
 </for>
-<for ftype=".otf">
-<sor folder="stylesheets/fonts" how="FileTypeSpecification"></sor>
+<for folder="stylesheets/images">
+<sor how="FileTypeSpecification" spec=".jgp"></sor>
 </for>
-<for ftype=".ttf">
-<sor folder="stylesheets/fonts" how="FileTypeSpecification"></sor>
+<for folder="stylesheets/fonts">
+<sor how="FileTypeSpecification"  spec=".otf"></sor>
 </for>
-<for ftype=".txt">
-<sor folder="txts" how="PrefixSpecification" spec="txxt-"></sor>
+<for>
+<sor folder="stylesheets/fonts" how="FileTypeSpecification" spec=".ttf"></sor>
+</for>
+<for folder="txts">
+<sor how="PrefixSpecification" spec="txxt-"></sor>
+<sor how="FileTypeSpecification" spec=".txt"></sor>
 </for>
 </file-orientation>
 </organization>

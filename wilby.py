@@ -23,15 +23,14 @@ import shutil
 '''
  
 
-class IceGrabber(object):
+class Wilby(object):
     folder_list = []
-    type_orient = []
+    fl_orient = []
     dirl = []
     oriens = []
     has_loaded_before = False
     defdir = "organize"
     defconf = "orgstructure.xml"
-
     def load_config(self,path):
         try:
             configf = xml.dom.minidom.parse(path)
@@ -40,8 +39,8 @@ class IceGrabber(object):
                 if not fol.nodeType == Node.TEXT_NODE:
                     self.folder_list.append(fol)
                     fl_orien = configf.getElementsByTagName("file-orientation")[0]
-            for type_or in fl_orien.getElementsByTagName("for"):
-                self.type_orient.append(type_or)
+            for fl_or in fl_orien.getElementsByTagName("for"):
+                self.fl_orient.append(fl_or)
         except Exception:
             print("Exception ocurred when loading config")
             
@@ -104,17 +103,16 @@ class IceGrabber(object):
             self.ftype = filetype
             
         def __repr__(self):
-            if self.spec:
-                return "Spec: " + self.spec + " how select: " + self.how +\
-                " filetype: " + self.ftype + " target folder: " + self.target_folder
-            else:
-                return "Spec: filetype" + " how select: " + self.how +\
+            return "Spec: " + self.spec + " how select: " + self.how +\
                 " filetype: " + self.ftype + " target folder: " + self.target_folder
                 
         def test_file(self, filen):
             if filen.endswith(self.ftype):
                 if self.how == "FileTypeSpecification":
-                    return True
+                    if filen.endswith(self.spec):
+                        return True
+                    else:
+                        return False
                 elif self.how == "FullNameSpecification":
                     if ".".join(filen.split(".")[:-1]) == self.spec:
                         return True
@@ -133,7 +131,7 @@ class IceGrabber(object):
                     else:
                         return False   
                 elif self.how == "PrefixAndSufixSpecification":
-                    if filen.startswith(self.spec.split(" ")[0]) and filen.endswith(self.spec.split(" _$_")[1]):
+                    if filen.startswith(self.spec.split(" ")[0]) and filen.endswith(self.spec.split(" %%")[1]):
                         return True
                     else:
                         return False
@@ -141,15 +139,16 @@ class IceGrabber(object):
                 return False
             
     def get_orientations(self):
-        for ortype in self.type_orient:
-            for curr_sor in ortype.childNodes:
+        sub_ors = []
+        f_ors = []
+        for forien in self.fl_orient:
+            for curr_sor in forien.childNodes:
                 if not curr_sor.nodeType == Node.TEXT_NODE:
-                    if curr_sor.getAttribute("how") == "FileTypeSpecification":
-                        self.oriens.append(self.FileOrientation(curr_sor.getAttribute("how"), ortype.getAttribute("ftype"),\
-                                curr_sor.getAttribute("folder")))
-                    else:
-                        self.oriens.append(self.FileOrientation(curr_sor.getAttribute("how"),ortype.getAttribute("ftype"),\
-                                curr_sor.getAttribute("folder"), specification=curr_sor.getAttribute("spec") )) 
+                        sub_ors.append(self.FileOrientation(curr_sor.getAttribute("how"), curr_sor.getAttribute("ftype"),\
+                                forien.getAttribute("folder"), curr_sor.getAttribute("spec")))
+            f_ors.append(sub_ors)
+            sub_ors = []
+        self.oriens = f_ors
                     
     def check_files(self,orgdir):
         fqueue = []
@@ -162,15 +161,19 @@ class IceGrabber(object):
         return allfiles
     
     def org_files(self ,files, orgdir, rootdir):
+        is_ok = True
         if not rootdir.startswith("/") and not rootdir == "":
             rootdir = "/" + rootdir
         if not orgdir.startswith("/"):
             orgdir = "/" + orgdir
         if not orgdir.endswith("/"):
             orgdir += "/"
-        for orientation in self.oriens:
+        for orientations in self.oriens:
             for cfile in files:
-                if(orientation.test_file(cfile)):
+                for orientation in orientations:
+                    is_ok = orientation.test_file(cfile)
+                    if not is_ok: break
+                if is_ok:
                     print("File", cfile, " went ok in test for", orientation)
                     print("Moving", cfile)
                     print("From:", os.getcwd() + orgdir + cfile)
@@ -184,6 +187,7 @@ class IceGrabber(object):
                         print("Path:", os.getcwd() + orgdir + cfile)
                         print("Target:", os.getcwd() + rootdir + orientation.target_folder + "/" + cfile)
                         return
+                else: is_ok = True
                 
     def organize(self):
         if not self.orgdir.startswith("/"):
@@ -210,6 +214,7 @@ class IceGrabber(object):
         self.rootdir = rootdir
         self.config_file = config_file
         self.orgdir = orgdir
+        self.oriens = {}
         
 
 
